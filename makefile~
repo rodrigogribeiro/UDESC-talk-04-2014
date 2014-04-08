@@ -1,0 +1,5 @@
+default: pdf
+
+pdf:
+	agda --latex Code.lagda
+	latexmk -pdf -use-make talk.tex

@@ -1,0 +1,433 @@
+ \documentclass{beamer}
+ %\documentclass[xetex, mathserif, serif]{beamer} 
+    \usepackage{agda}
+    \usepackage{catchfilebetweentags}
+    \usetheme{Luebeck}
+
+    %\setmainfont{XITS}
+    %\setmathfont{XITS Math}
+    
+    \title{Programa\c{c}\~ao com Tipos Dependentes em Agda}
+    \author[R. Ribeiro]{Rodrigo Ribeiro}
+    \institute[UFOP]{
+      Departamento de Computa\c{c}\~ao e Sistemas --- DECSI\\
+      Universidade de Federal de Ouro Preto
+    }
+    \date{\today}
+    \begin{document}
+       \maketitle
+       \section{Motiva\c{c}\~ao}
+
+       \begin{frame}{Motiva\c{c}\~ao --- (I)}
+         \begin{itemize}
+           \item Sistemas de tipos
+           \begin{itemize}
+             \item T\'ecnica de verifica\c{c}\~ao de programas mais utilizada.
+             \item Aplica\c{c}\~oes em seguran\c{c}a e concorr\^encia.
+           \end{itemize}
+           \item Por\'em, como garantir a corre\c{c}\~ao de um programa?
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{Motiva\c{c}\~ao --- (II)}
+         \begin{itemize}
+           \item Por\'em, como garantir a corre\c{c}\~ao de um programa?
+           \begin{itemize}
+             \item Geralmente, dif\'icil... 
+             \item Envolve demonstra\c{c}\~oes formais ou uso de t\'ecnicas como 
+                   model checking.
+           \end{itemize}
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{Motiva\c{c}\~ao --- (III)}
+         \begin{itemize}
+           \item Verifica\c{c}\~ao de programas --- Situa\c{c}\~ao Ideal:
+           \begin{itemize}
+             \item Verifica\c{c}\~ao autom\'atica.
+             \item Idealmente, dever\'iamos ser capazes de especificar e programar em uma mesma linguagem.
+           \end{itemize}
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{Motiva\c{c}\~ao --- (IV)}
+         \begin{itemize}
+           \item Especificar e programar em uma mesma linguagem?
+           \begin{itemize}
+             \item Evita problemas de consist\^encia entre diferentes linguagens. 
+           \end{itemize}
+           \item Por\'em, existe esta linguagem? 
+         \end{itemize}
+       \end{frame}  
+
+       \begin{frame}{Motiva\c{c}\~ao --- (V)}
+         \begin{itemize}
+           \item A linguagem Agda
+           \begin{itemize}
+             \item Linguagem Funcional!
+             \item Sistema de tipos expressivo, capaz de representar especifica\c{c}\~oes.
+           \end{itemize}
+           \item Se tipos em Agda representam especifica\c{c}\~oes, ent\~ao...
+           \begin{itemize}
+             \item O processo de verifica\c{c}\~ao \'e feito pelo pr\'oprio compilador de Agda!
+           \end{itemize}
+         \end{itemize}
+       \end{frame}
+
+       \section{A Linguagem Agda}
+
+       \begin{frame}{A Linguagem Agda --- (I)}
+         \begin{itemize}
+           \item Em Agda, n\~ao existem tipos ``built-in''. Tudo \'e definido na pr\'opria linguagem.
+           \item Tipos em Agda s\~ao uma generaliza\c{c}\~ao de tipos de dados alg\'ebricos encontrados em Haskell e ML.
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{A Linguagem Agda --- (II)}
+         \begin{itemize}
+           \item Exemplo:
+
+           \ExecuteMetaData[latex/Code.tex]{nat}
+
+           \item Agda permite o uso de caracteres Unicode!
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{A Linguagem Agda --- (III)}
+         \begin{itemize}
+           \item Exemplo:
+
+           \ExecuteMetaData[latex/Code.tex]{nat}
+
+           \item A anota\c{c}\~ao \texttt{Set} especifica que $\mathbb{N}$ \'e um tipo.
+           \begin{itemize}
+             \item O termo \texttt{Set} possui tipo $\texttt{Set}_1$.
+             \item Em Agda, temos uma hierarquia de tipos tal que: $\texttt{Set} : \texttt{Set}_1 : \texttt{Set}_2 ...$
+           \end{itemize}
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{A Linguagem Agda --- (IV)}
+         \begin{itemize}
+           \item Exemplo:
+
+           \ExecuteMetaData[latex/Code.tex]{nat}
+
+           \item O tipo $\mathbb{N}$ possui dois construtores:
+           \begin{itemize}
+             \item \texttt{zero} que representa a constante $0$
+             \item \texttt{suc} que representa a fun\c{c}\~ao de sucessor.
+           \end{itemize}
+         \end{itemize}
+       \end{frame}       
+
+       \begin{frame}{A Linguagem Agda --- (V)}
+         \begin{itemize}
+           \item Usando $\mathbb{N}$ podemos representar os n\'umeros naturais como:
+
+           \begin{table}
+             \begin{tabular}{lcl}
+               zero     & $\equiv$ & 0\\
+               suc zero & $\equiv$ & 1\\
+               suc (suc zero) & $\equiv$ & 2 \\
+               ...            & ... &    ...
+             \end{tabular}
+           \end{table}
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{A Linguagem Agda --- (VI)}
+         \begin{itemize}
+           \item Adi\c{c}\~ao em Agda:
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{plus}
+       \end{frame}
+
+       \begin{frame}{A Linguagem Agda --- (VII)}
+         \begin{itemize}
+           \item Listas
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{listdef}
+       \end{frame}
+
+       \begin{frame}{A Linguagem Agda --- (VIII)}
+         \begin{itemize}
+           \item Fun\c{c}\~oes sobre listas: tamanho
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{length}
+       \end{frame}
+       
+       \begin{frame}{A Linguagem Agda --- (IX)}
+         \begin{itemize}
+           \item Fun\c{c}\~oes sobre listas: concatena\c{c}\~ao
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{concat}         
+       \end{frame}
+
+       \begin{frame}{A Linguagem Agda --- (X)}
+         \begin{itemize}
+           \item Podemos conjecturar que:
+           \[
+           \forall\,xs\,ys. length(xs ++ ys) = length\: xs + length\: ys
+           \]
+           \item Isto \'e, o tamanho da concatena\c{c}\~ao de duas listas \'e a soma de seus tamanhos.
+         \end{itemize}
+       \end{frame}
+       
+       \begin{frame}{A Linguagem Agda --- (XI)}
+         \begin{itemize}
+           \item $\forall\,xs\,ys. length(xs ++ ys) = length\: xs + length\: ys$
+           \begin{itemize}
+             \item Teorema facilmente provado por indu\c{c}\~ao sobre a estrutura de $xs$.
+             \item Apesar de poss\'ivel provar esse fato em Agda, vamos usar o sistema de tipos de Agda
+                   para garantir que a concatena\c{c}\~ao possua essa propriedade.
+           \end{itemize}
+           \item Para isso, vamos utilizar \textbf{tipos dependentes}.
+         \end{itemize}
+       \end{frame}
+
+       \section{Tipos Dependentes}
+
+       \begin{frame}{Tipos Dependentes --- (I)}
+         \begin{itemize}
+           \item Dizemos que um certo tipo \'e dependente se este depende de um valor.
+           \item Exemplo --- Listas indexadas por seu tamanho:
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{vector}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (II)}
+         \begin{itemize}
+           \item O tipo \texttt{Vec A n} \'e uma \textbf{fam\'ilia de tipos indexada} por n\'umeros naturais.
+           \begin{itemize}
+             \item Isto \'e, para cada valor \texttt{n : $\mathbb{N}$}, temos um tipo \texttt{Vec A n}
+             \item Note que o tipo \texttt{Vec A n} especifica o n\'umero de elementos presentes em uma lista!
+           \end{itemize}
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (III)}
+         \begin{itemize}
+           \item Mas, qual a vantagem disso?
+           \begin{itemize}
+             \item Tipos mais precisos, permitem programas corretos!
+           \end{itemize}
+         \end{itemize}         
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (IV)}
+         \begin{itemize}
+           \item Exemplo: obtendo a cabe\c{c}a de uma lista.
+           \begin{itemize}
+             \item Problema: E se a lista for vazia, o que devemos retornar?
+           \end{itemize}
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (V)}
+         \begin{itemize}
+           \item Primeiro, usando listas...
+           \item O tipo \texttt{Maybe A} indica a possibilidade de retorno de um valor.
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{maybe}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (VI)}
+         \begin{itemize}
+           \item Usando o tipo \texttt{Maybe A}:
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{listhead}
+         \begin{itemize}
+           \item Problema desta solu\c{c}\~ao: Uso do tipo \texttt{Maybe A}.
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (VII)}
+         \begin{itemize}
+           \item Usando o tipo \texttt{Vec A n}, podemos expressar o tipo de uma lista \textbf{n\~ao vazia} por
+                 \texttt{Vec A (suc n)}. 
+           \item O compilador garante que jamais aplicaremos a fun\c{c}\~ao \texttt{head} a uma lista vazia!
+         \end{itemize} 
+         \ExecuteMetaData[latex/Code.tex]{vectorhead}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (VIII)}
+         \begin{itemize}
+           \item Voltando a fun\c{c}\~ao de concatena\c{c}\~ao...
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{vectorconcat}
+         \begin{itemize}
+           \item Agora, a propriedade sobre o tamanho da concaten\c{c}\~ao de duas listas \'e verificada automaticamente pelo compilador.
+           \item C\'odigo id\^entico a concatena\c{c}\~ao de listas.
+         \end{itemize}
+       \end{frame}
+       
+       \begin{frame}{Tipos Dependentes --- (IX)}
+         \begin{itemize}
+           \item Mais um exemplo: obtendo o $n$-\'esimo elemento de uma lista.
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{lookupweak}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (X)}
+         \begin{itemize}
+           \item Como desenvolver uma fun\c{c}\~ao correta por constru\c{c}\~ao para esta tarefa?
+           \begin{itemize}
+             \item Primeiro, o que quer dizer ``ser $n$-\'esimo elemento'' de uma lista?
+           \end{itemize}
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (XI)}
+         \begin{itemize}
+           \item Formalizando a no\c{c}\~ao de um elemento pertencer a uma lista:
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{indef}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (XII)}
+         \begin{itemize}
+           \item Recuperando o \'indice de um elemento a partir de uma prova de pertin\^encia:
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{index}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (XIII)}
+         \begin{itemize}
+           \item Especificando a fun\c{c}\~ao para obter o $n$-\'esimo elemento de uma lista:
+           \begin{itemize}
+             \item Se $n$ for uma posi\c{c}\~ao de um elemento, ent\~ao este possuir\'a uma prova de pertin\^encia.
+             \item Se $n \geq \texttt{length xs}$, ent\~ao n\~ao existe esse elemento.
+           \end{itemize}
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (XIV)}
+         \begin{itemize}
+           \item Um tipo preciso para a fun\c{c}\~ao para obter o $n$-\'esimo elemento de uma lista:
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{lookupData}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (XV)}
+         \begin{itemize}
+           \item Fun\c{c}\~ao correta por constru\c{c}\~ao:
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{lookupCorrect}
+       \end{frame}
+
+       \begin{frame}{Tipos Dependentes --- (XVI)}
+         \begin{itemize}
+           \item Casamento de padr\~ao com tipos dependentes:
+           \begin{itemize}
+             \item Se \texttt{lookup xs n = outside m}, ent\~ao $n \geq length\: xs$
+             \item Se \texttt{lookup xs n = inside p}, ent\~ao $p$ \'e uma prova de que
+                   $x$ pertence a lista $xs$ e $n$ \'e o \'indice obtido a partir desta prova!
+           \end{itemize}
+         \end{itemize}
+       \end{frame}
+
+       \section{Verifica\c{c}\~ao de Tipos de $\lambda$-termos}
+
+       \begin{frame}{Verificando Tipos --- (I)}
+         \begin{itemize}
+           \item \'Ultimo e derradeiro exemplo: Algoritmo para verificar tipos correto por constru\c{c}\~ao.
+           \item O tipo do algoritmo ``explica'' o porqu\^e um termo \'e correto.
+           \item $\lambda$-c\'alculo
+           \begin{itemize}
+             \item Linguagem funcional ``minimalista''.
+           \end{itemize}
+         \end{itemize}
+       \end{frame}
+
+       \begin{frame}{Verificando Tipos --- (II)}
+         \begin{itemize}
+           \item $\lambda$-c\'alculo: Sintaxe de tipos
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{basedefs}
+       \end{frame}
+
+       \begin{frame}{Verificando Tipos --- (III)}
+         \begin{itemize}
+           \item $\lambda$-c\'alculo: Sintaxe de termos
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{rawterms}
+       \end{frame}
+
+       \begin{frame}{Verificando Tipos --- (IV)}
+         \begin{itemize}
+           \item Sistema de tipos
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{derivation}
+       \end{frame}
+       
+       \begin{frame}{Verificando Tipos --- (V)}
+         \begin{itemize}
+           \item Obtendo uma express\~ao a partir de sua deriva\c{c}\~ao de tipos --- type erasure
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{erase}
+       \end{frame}
+       
+
+       \begin{frame}{Verificando Tipos --- (VI)}
+         \begin{itemize}
+           \item Comparando dois tipos com respeito a igualdade
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{typeeq}
+       \end{frame}
+
+       \begin{frame}{Verificando Tipos --- (VII)}
+         \begin{itemize}
+           \item Decidindo a igualdade entre tipos
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{typecmp}
+       \end{frame}
+
+       \begin{frame}{Verificando Tipos --- (VIII)}
+         \begin{itemize}
+           \item Especificando o comportamento do algoritmo
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{infer}
+       \end{frame}
+
+       \begin{frame}{Verificando Tipos --- (IX)}
+         \begin{itemize}
+           \item O algoritmo de verifica\c{c}\~ao --- parte 1:
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{typechecker1}
+       \end{frame}
+
+       \begin{frame}{Verificando Tipos --- (X)}
+         \begin{itemize}
+           \item O algoritmo de verifica\c{c}\~ao --- parte 2:
+         \end{itemize}
+         \ExecuteMetaData[latex/Code.tex]{typechecker2}
+       \end{frame}
+
+
+        \begin{frame}{Verificando Tipos --- (XI)}
+         \begin{itemize}
+           \item O algoritmo de verifica\c{c}\~ao --- parte 3:
+         \end{itemize}
+         \begin{flushleft}
+         \ExecuteMetaData[latex/Code.tex]{typechecker3}
+         \end{flushleft}
+       \end{frame}
+
+       \section{Conclus\~ao}
+       \begin{frame}{Conclus\~ao}
+         \begin{itemize}
+           \item Moral da hist\'oria:
+           \begin{itemize}
+             \item Tipos dependentes permitem a especifica\c{c}\~ao precisa do relacionamento entre par\^ametros e
+                   resultados de fun\c{c}\~oes.
+             \item Verificados automaticamente pelo compilador!
+           \end{itemize}
+           \item Isso \'e apenas a ponta do Iceberg... N\~ao falamos sobre:
+           \begin{itemize}
+             \item Provas em Agda, Igualdade, Termina\c{c}\~ao...
+           \end{itemize}
+         \end{itemize}
+       \end{frame}
+
+    \end{document}
